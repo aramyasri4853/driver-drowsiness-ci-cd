@@ -1,23 +1,22 @@
-# Use a lightweight Python image
-FROM python:3.10-slim
-
-# Install OpenCV dependencies
-RUN apt-get update && apt-get install -y \
-    libgl1 \
-    libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
+# Use Python 3.12 base image (matches your local version)
+FROM python:3.12-slim
 
 # Set working directory
 WORKDIR /app
 
-# Copy application files
-COPY app /app
+# Copy your application code
+COPY app/ /app/
+
+# Install system dependencies required for OpenCV
+RUN apt-get update && \
+    apt-get install -y libgl1 libglib2.0-0 && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
 RUN pip install --no-cache-dir flask opencv-python numpy
 
-# Expose Flask port
+# Expose port for Flask
 EXPOSE 5000
 
-# Run the application
+# Command to run your app
 CMD ["python", "main.py"]
